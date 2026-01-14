@@ -3,15 +3,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BankStatementCSVParser {
+public class BankStatementCSVParser implements BankStatementParser{
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    public List<BankTransaction> parseLinesFromCSV(final List<String> lines){
-        return lines.stream().map(this::parserFromSCV).toList();
+    @Override
+    public List<BankTransaction> parseLinesFrom(final List<String> lines){
+        return lines.stream().map(this::parseLineFrom).toList();
     }
 
-    private BankTransaction parserFromSCV(final String line){
+    @Override
+    public BankTransaction parseLineFrom(final String line){
         String[] column = line.split(",");
 
         return new BankTransaction(
@@ -19,7 +21,5 @@ public class BankStatementCSVParser {
                 Double.parseDouble(column[1]),
                 column[2]);
     }
-
-
 
 }

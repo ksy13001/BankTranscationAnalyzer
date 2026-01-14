@@ -2,25 +2,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Month;
-import java.time.MonthDay;
 import java.util.List;
 
-public class BankTransactionAnalyzer {
+public class BankStatementAnalyzer {
 
     private static final String FILE_PATH = "src/BankTransactionDetails";
-    private static final BankStatementCSVParser parser = new BankStatementCSVParser();
+    private final BankStatementParser parser;
 
-    public static void main(String[] args) throws IOException {
+    public BankStatementAnalyzer(BankStatementParser parser) {
+        this.parser = parser;
+    }
+
+    public void analyze() throws IOException {
         final Path transactionDetails = Path.of(FILE_PATH);
         final List<String> lines = Files.readAllLines(transactionDetails);
-        final List<BankTransaction> transactions = parser.parseLinesFromCSV(lines);
+        final List<BankTransaction> transactions = parser.parseLinesFrom(lines);
 
         BankStatementProcessor processor = new BankStatementProcessor(transactions);
 
         collectSummery(processor);
     }
 
-    private static void collectSummery(final BankStatementProcessor processor) {
+    private void collectSummery(final BankStatementProcessor processor) {
         System.out.println("total: " + processor.calculateTotalAmount());
         for (Month month : Month.values()) {
             System.out.println(month + " : " + processor.calculateTotalForMonth(month));
