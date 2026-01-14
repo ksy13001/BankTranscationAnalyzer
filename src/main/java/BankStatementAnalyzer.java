@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
@@ -40,5 +41,12 @@ public class BankStatementAnalyzer {
         for (Month month : Month.values()) {
             System.out.println(month + " : " + processor.calculateTotalForMonth(month));
         }
+        double maxAmountInJanuary = processor.calculateMaximumTransactionAmountBetweenDates(
+                LocalDate.of(2017, 1, 1), LocalDate.of(2017,1 ,31));
+        double minAmountInJanuary = processor.calculateMinimumTransactionAmountBetweenDates(
+                LocalDate.of(2017, 1, 1), LocalDate.of(2017,1 ,31));
+        System.out.println("max Amount in January : " + maxAmountInJanuary);
+        System.out.println("min Amount in January : " + minAmountInJanuary);
+
     }
 }
