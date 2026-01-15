@@ -55,4 +55,10 @@ public class BankStatementProcessor {
                 .filter(bankTransaction -> bankTransaction.getDate().getMonth() == month)
                 .toList();
     }
+
+    public List<BankTransaction> findTransactionsOverLimit(final double limit) {
+        return bankTransactions.stream()
+                .filter(bankTransaction -> bankTransaction.getAmount() > limit)
+                .toList();
+    }
 }
