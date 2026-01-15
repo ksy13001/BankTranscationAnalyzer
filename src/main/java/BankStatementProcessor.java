@@ -50,29 +50,15 @@ public class BankStatementProcessor {
                 .orElse(0.0);
     }
 
-    public List<BankTransaction> selectInMonth(final Month month) {
+    public List<BankTransaction> selectInMonth(final Month month){
         return bankTransactions.stream()
-                .filter(bankTransaction -> isTransactionInMonth(bankTransaction, month))
+                .filter(bankTransaction -> bankTransaction.getDate().getMonth()==month)
                 .toList();
     }
 
-    public List<BankTransaction> findTransactionsGreaterThan(final double amount) {
+    public List<BankTransaction> findTransactions(BankTransactionFilter filter){
         return bankTransactions.stream()
-                .filter(bankTransaction -> isTransactionAmountGreaterThan(bankTransaction, amount))
+                .filter(filter::test)
                 .toList();
-    }
-
-    public List<BankTransaction> findTransactionsByMonthAndAmount(final Month month, final double amount) {
-        return bankTransactions.stream()
-                .filter(bt -> isTransactionInMonth(bt, month) && isTransactionAmountGreaterThan(bt, amount))
-                .toList();
-    }
-
-    private boolean isTransactionInMonth(final BankTransaction bankTransaction, final Month month) {
-        return bankTransaction.getDate().getMonth().equals(month);
-    }
-
-    private boolean isTransactionAmountGreaterThan(final BankTransaction bankTransaction, final double amount) {
-        return bankTransaction.getAmount() > amount;
     }
 }
