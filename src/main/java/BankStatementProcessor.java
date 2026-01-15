@@ -52,13 +52,27 @@ public class BankStatementProcessor {
 
     public List<BankTransaction> selectInMonth(final Month month) {
         return bankTransactions.stream()
-                .filter(bankTransaction -> bankTransaction.getDate().getMonth() == month)
+                .filter(bankTransaction -> isTransactionInMonth(bankTransaction, month))
                 .toList();
     }
 
-    public List<BankTransaction> findTransactionsOverLimit(final double limit) {
+    public List<BankTransaction> findTransactionsGreaterThan(final double amount) {
         return bankTransactions.stream()
-                .filter(bankTransaction -> bankTransaction.getAmount() > limit)
+                .filter(bankTransaction -> isTransactionAmountGreaterThan(bankTransaction, amount))
                 .toList();
+    }
+
+    public List<BankTransaction> findTransactionsByMonthAndAmount(final Month month, final double amount) {
+        return bankTransactions.stream()
+                .filter(bt -> isTransactionInMonth(bt, month) && isTransactionAmountGreaterThan(bt, amount))
+                .toList();
+    }
+
+    private boolean isTransactionInMonth(final BankTransaction bankTransaction, final Month month) {
+        return bankTransaction.getDate().getMonth().equals(month);
+    }
+
+    private boolean isTransactionAmountGreaterThan(final BankTransaction bankTransaction, final double amount) {
+        return bankTransaction.getAmount() > amount;
     }
 }
