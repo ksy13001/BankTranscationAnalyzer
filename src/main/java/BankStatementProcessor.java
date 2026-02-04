@@ -11,7 +11,8 @@ public class BankStatementProcessor {
     }
 
     public double calculateTotalAmount() {
-        return bankTransactions.stream().map(BankTransaction::getAmount)
+        return bankTransactions.stream()
+                .map(BankTransaction::getAmount)
                 .reduce(0d, Double::sum);
     }
 
@@ -50,9 +51,15 @@ public class BankStatementProcessor {
                 .orElse(0.0);
     }
 
-    public List<BankTransaction> selectInMonth(final Month month) {
+    public List<BankTransaction> selectInMonth(final Month month){
         return bankTransactions.stream()
-                .filter(bankTransaction -> bankTransaction.getDate().getMonth() == month)
+                .filter(bankTransaction -> bankTransaction.getDate().getMonth()==month)
+                .toList();
+    }
+
+    public List<BankTransaction> findTransactions(BankTransactionFilter filter){
+        return bankTransactions.stream()
+                .filter(filter::test)
                 .toList();
     }
 }

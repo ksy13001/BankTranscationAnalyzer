@@ -17,7 +17,7 @@ public class BankStatementAnalyzer {
     }
 
     public void analyze() throws IOException {
-        final List<String> lines = readLinesFromResource(RESOURCE_NAME);
+        final List<String> lines = readLinesFromResource();
         final List<BankTransaction> transactions = parser.parseLinesFrom(lines);
 
         BankStatementProcessor processor = new BankStatementProcessor(transactions);
@@ -25,10 +25,10 @@ public class BankStatementAnalyzer {
         collectSummery(processor);
     }
 
-    private List<String> readLinesFromResource(final String resourceName) throws IOException {
-        InputStream input = BankStatementAnalyzer.class.getClassLoader().getResourceAsStream(resourceName);
+    private List<String> readLinesFromResource() throws IOException {
+        InputStream input = BankStatementAnalyzer.class.getClassLoader().getResourceAsStream(BankStatementAnalyzer.RESOURCE_NAME);
         if (input == null) {
-            throw new IllegalStateException("Resource not found: " + resourceName);
+            throw new IllegalStateException("Resource not found: " + BankStatementAnalyzer.RESOURCE_NAME);
         }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
@@ -41,12 +41,16 @@ public class BankStatementAnalyzer {
         for (Month month : Month.values()) {
             System.out.println(month + " : " + processor.calculateTotalForMonth(month));
         }
+        processor.findTransactions(bankTransaction -> bankTransaction.getAmount() > 1000)
+                .forEach(System.out::println);
         double maxAmountInJanuary = processor.calculateMaximumTransactionAmountBetweenDates(
-                LocalDate.of(2017, 1, 1), LocalDate.of(2017,1 ,31));
+                LocalDate.of(2017, 1, 1),
+                LocalDate.of(2017,1 ,31));
         double minAmountInJanuary = processor.calculateMinimumTransactionAmountBetweenDates(
-                LocalDate.of(2017, 1, 1), LocalDate.of(2017,1 ,31));
+                LocalDate.of(2017, 1, 1),
+                LocalDate.of(2017,1 ,31));
+
         System.out.println("max Amount in January : " + maxAmountInJanuary);
         System.out.println("min Amount in January : " + minAmountInJanuary);
-
     }
 }
