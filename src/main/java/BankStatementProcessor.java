@@ -11,7 +11,8 @@ public class BankStatementProcessor {
     }
 
     public double calculateTotalAmount() {
-        return bankTransactions.stream().map(BankTransaction::getAmount)
+        return bankTransactions.stream()
+                .map(BankTransaction::getAmount)
                 .reduce(0d, Double::sum);
     }
 
